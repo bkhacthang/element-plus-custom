@@ -620,6 +620,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             onFocus: _ctx.handleFocus,
             onBlur: _ctx.handleBlur,
             onKeyup: _ctx.debouncedOnInputChange,
+            onChange: _ctx.debouncedOnInputChange,
             onPaste: _ctx.debouncedOnInputChange,
             onCompositionstart: _ctx.handleComposition,
             onCompositionupdate: _ctx.handleComposition,
