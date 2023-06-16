@@ -619,7 +619,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             tabindex: _ctx.multiple && _ctx.filterable ? -1 : void 0,
             onFocus: _ctx.handleFocus,
             onBlur: _ctx.handleBlur,
-            onInput: _ctx.debouncedOnInputChange,
+            onKeyup: _ctx.debouncedOnInputChange,
             onPaste: _ctx.debouncedOnInputChange,
             onCompositionstart: _ctx.handleComposition,
             onCompositionupdate: _ctx.handleComposition,
