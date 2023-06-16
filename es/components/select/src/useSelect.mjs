@@ -408,6 +408,7 @@ const useSelect = (props, states, ctx) => {
   const onInputChange = () => {
     if (props.filterable && states.query !== states.selectedLabel) {
       states.query = states.selectedLabel;
+      console.log(states.query)
       handleQueryChange(states.query);
     }
   };
