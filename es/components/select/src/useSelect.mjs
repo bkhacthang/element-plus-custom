@@ -413,7 +413,6 @@ const useSelect = (props, states, ctx) => {
         states.query = states.selectedLabel;
         handleQueryChange(states.query);
       }
-      handleQueryChange(states.query);
     }
   };
   const debouncedOnInputChange = debounce(() => {
