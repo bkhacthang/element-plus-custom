@@ -619,13 +619,12 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             tabindex: _ctx.multiple && _ctx.filterable ? -1 : void 0,
             onFocus: _ctx.handleFocus,
             onBlur: _ctx.handleBlur,
-            onKeyup: _ctx.debouncedOnInputChange,
-            onChange: _ctx.debouncedOnInputChange,
+            onInput: _ctx.debouncedOnInputChange,
             onPaste: _ctx.debouncedOnInputChange,
             onCompositionstart: _ctx.handleComposition,
             onCompositionupdate: _ctx.handleComposition,
             onCompositionend: _ctx.handleComposition,
-            onKeydown: [
+            onKeyup: [
               _cache[16] || (_cache[16] = withKeys(withModifiers(($event) => _ctx.navigateOptions("next"), ["stop", "prevent"]), ["down"])),
               _cache[17] || (_cache[17] = withKeys(withModifiers(($event) => _ctx.navigateOptions("prev"), ["stop", "prevent"]), ["up"])),
               withKeys(withModifiers(_ctx.selectOption, ["stop", "prevent"]), ["enter"]),

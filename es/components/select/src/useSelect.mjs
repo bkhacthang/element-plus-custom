@@ -1,25 +1,25 @@
-import { reactive, computed, ref, shallowRef, watch, nextTick, triggerRef, toRaw } from 'vue';
-import { isFunction, toRawType, isString, isObject } from '@vue/shared';
-import { isEqual, get, debounce } from 'lodash-unified';
-import { isClient, isNumber } from '@vueuse/core';
+import {reactive, computed, ref, shallowRef, watch, nextTick, triggerRef, toRaw} from 'vue';
+import {isFunction, toRawType, isString, isObject} from '@vue/shared';
+import {isEqual, get, debounce} from 'lodash-unified';
+import {isClient, isNumber} from '@vueuse/core';
 import '../../../constants/index.mjs';
 import '../../../utils/index.mjs';
 import '../../../hooks/index.mjs';
 import '../../form/index.mjs';
-import { useLocale } from '../../../hooks/use-locale/index.mjs';
-import { useNamespace } from '../../../hooks/use-namespace/index.mjs';
-import { useDeprecated } from '../../../hooks/use-deprecated/index.mjs';
-import { useFormItem } from '../../form/src/hooks/use-form-item.mjs';
-import { useFormSize } from '../../form/src/hooks/use-form-common-props.mjs';
-import { debugWarn } from '../../../utils/error.mjs';
-import { getComponentSize } from '../../../utils/vue/size.mjs';
-import { CHANGE_EVENT, UPDATE_MODEL_EVENT } from '../../../constants/event.mjs';
-import { scrollIntoView } from '../../../utils/dom/scroll.mjs';
-import { EVENT_CODE } from '../../../constants/aria.mjs';
-import { isKorean } from '../../../utils/i18n.mjs';
+import {useLocale} from '../../../hooks/use-locale/index.mjs';
+import {useNamespace} from '../../../hooks/use-namespace/index.mjs';
+import {useDeprecated} from '../../../hooks/use-deprecated/index.mjs';
+import {useFormItem} from '../../form/src/hooks/use-form-item.mjs';
+import {useFormSize} from '../../form/src/hooks/use-form-common-props.mjs';
+import {debugWarn} from '../../../utils/error.mjs';
+import {getComponentSize} from '../../../utils/vue/size.mjs';
+import {CHANGE_EVENT, UPDATE_MODEL_EVENT} from '../../../constants/event.mjs';
+import {scrollIntoView} from '../../../utils/dom/scroll.mjs';
+import {EVENT_CODE} from '../../../constants/aria.mjs';
+import {isKorean} from '../../../utils/i18n.mjs';
 
 function useSelectStates(props) {
-  const { t } = useLocale();
+  const {t} = useLocale();
   return reactive({
     options: /* @__PURE__ */ new Map(),
     cachedOptions: /* @__PURE__ */ new Map(),
@@ -47,8 +47,9 @@ function useSelectStates(props) {
     mouseEnter: false
   });
 }
+
 const useSelect = (props, states, ctx) => {
-  const { t } = useLocale();
+  const {t} = useLocale();
   const ns = useNamespace("select");
   useDeprecated({
     from: "suffixTransition",
@@ -65,11 +66,11 @@ const useSelect = (props, states, ctx) => {
   const selectWrapper = ref(null);
   const scrollbar = ref(null);
   const hoverOption = ref(-1);
-  const queryChange = shallowRef({ query: "" });
+  const queryChange = shallowRef({query: ""});
   const groupQueryChange = shallowRef("");
   const optionList = ref([]);
   let originClientHeight = 0;
-  const { form, formItem } = useFormItem();
+  const {form, formItem} = useFormItem();
   const readonly = computed(() => !props.filterable || props.multiple || !states.visible);
   const selectDisabled = computed(() => props.disabled || (form == null ? void 0 : form.disabled));
   const showClose = computed(() => {
@@ -84,8 +85,7 @@ const useSelect = (props, states, ctx) => {
     if (props.loading) {
       return props.loadingText || t("el.select.loading");
     } else {
-      if (props.remote && states.query === "" && states.options.size === 0)
-        return false;
+      if (props.remote && states.query === "" && states.options.size === 0) return false;
       if (props.filterable && states.query && states.options.size > 0 && states.filteredOptionsCount === 0) {
         return props.noMatchText || t("el.select.noMatch");
       }
@@ -120,8 +120,7 @@ const useSelect = (props, states, ctx) => {
   const dropMenuVisible = computed({
     get() {
       return states.visible && emptyText.value !== false;
-    },
-    set(val) {
+    }, set(val) {
       states.visible = val;
     }
   });
@@ -154,8 +153,7 @@ const useSelect = (props, states, ctx) => {
       formItem == null ? void 0 : formItem.validate("change").catch((err) => debugWarn(err));
     }
   }, {
-    flush: "post",
-    deep: true
+    flush: "post", deep: true
   });
   watch(() => states.visible, (val) => {
     var _a, _b, _c, _d, _e;
@@ -187,11 +185,14 @@ const useSelect = (props, states, ctx) => {
           } else {
             states.selectedLabel = states.selected.currentLabel;
           }
-          if (props.filterable)
-            states.query = states.selectedLabel;
+          if (props.filterable) states.query = states.selectedLabel;
         }
         if (props.filterable) {
           states.currentPlaceholder = states.cachedPlaceHolder;
+        }
+
+        if (props.remote) {
+          states.query = states.selectedLabel
         }
       }
     } else {
@@ -220,8 +221,7 @@ const useSelect = (props, states, ctx) => {
   });
   watch(() => states.options.entries(), () => {
     var _a, _b, _c;
-    if (!isClient)
-      return;
+    if (!isClient) return;
     (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
     if (props.multiple) {
       resetInputHeight();
@@ -249,8 +249,7 @@ const useSelect = (props, states, ctx) => {
   const resetInputHeight = () => {
     nextTick(() => {
       var _a, _b;
-      if (!reference.value)
-        return;
+      if (!reference.value) return;
       const input2 = reference.value.$el.querySelector("input");
       originClientHeight = originClientHeight || (input2.clientHeight > 0 ? input2.clientHeight + 2 : 0);
       const _tags = tags.value;
@@ -265,9 +264,7 @@ const useSelect = (props, states, ctx) => {
     });
   };
   const handleQueryChange = async (val) => {
-    console.log(val);
-    if (states.previousQuery === val || states.isOnComposition)
-      return;
+    if (states.previousQuery === val || states.isOnComposition) return;
     if (states.previousQuery === null && (isFunction(props.filterMethod) || isFunction(props.remoteMethod))) {
       states.previousQuery = val;
       return;
@@ -275,8 +272,7 @@ const useSelect = (props, states, ctx) => {
     states.previousQuery = val;
     nextTick(() => {
       var _a, _b;
-      if (states.visible)
-        (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
+      if (states.visible) (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
     });
     states.hoverIndex = -1;
     if (props.multiple && props.filterable) {
@@ -287,6 +283,7 @@ const useSelect = (props, states, ctx) => {
         resetInputHeight();
       });
     }
+
     if (props.remote && isFunction(props.remoteMethod)) {
       states.hoverIndex = -1;
       props.remoteMethod(val);
@@ -327,8 +324,7 @@ const useSelect = (props, states, ctx) => {
       }
       states.selectedLabel = option.currentLabel;
       states.selected = option;
-      if (props.filterable)
-        states.query = states.selectedLabel;
+      if (props.filterable) states.query = states.selectedLabel;
       return;
     } else {
       states.selectedLabel = "";
@@ -354,23 +350,18 @@ const useSelect = (props, states, ctx) => {
       const isEqualValue = isObjectValue ? get(cachedOption.value, props.valueKey) === get(value, props.valueKey) : cachedOption.value === value;
       if (isEqualValue) {
         option = {
-          value,
-          currentLabel: cachedOption.currentLabel,
-          isDisabled: cachedOption.isDisabled
+          value, currentLabel: cachedOption.currentLabel, isDisabled: cachedOption.isDisabled
         };
         break;
       }
     }
-    if (option)
-      return option;
+    if (option) return option;
     const label = isObjectValue ? value.label : !isNull && !isUndefined ? value : "";
     const newOption = {
-      value,
-      currentLabel: label
+      value, currentLabel: label
     };
     if (props.multiple) {
-      ;
-      newOption.hitState = false;
+      ;newOption.hitState = false;
     }
     return newOption;
   };
@@ -398,8 +389,7 @@ const useSelect = (props, states, ctx) => {
     var _a, _b;
     resetInputWidth();
     (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
-    if (props.multiple)
-      resetInputHeight();
+    if (props.multiple) resetInputHeight();
   };
   const resetInputWidth = () => {
     var _a;
@@ -407,12 +397,8 @@ const useSelect = (props, states, ctx) => {
   };
   const onInputChange = () => {
     if (props.filterable && states.query !== states.selectedLabel) {
-      console.log(states.query)
-      console.log(states.selectedLabel)
-      if (props.filterable && states.query !== states.selectedLabel) {
-        states.query = states.selectedLabel;
-        handleQueryChange(states.query);
-      }
+      states.query = states.selectedLabel;
+      handleQueryChange(states.query);
     }
   };
   const debouncedOnInputChange = debounce(() => {
@@ -453,8 +439,7 @@ const useSelect = (props, states, ctx) => {
     const value = props.multiple ? [] : "";
     if (!isString(value)) {
       for (const item of states.selected) {
-        if (item.isDisabled)
-          value.push(item.value);
+        if (item.isDisabled) value.push(item.value);
       }
     }
     ctx.emit(UPDATE_MODEL_EVENT, value);
@@ -480,8 +465,7 @@ const useSelect = (props, states, ctx) => {
         handleQueryChange("");
         states.inputLength = 20;
       }
-      if (props.filterable)
-        (_a = input.value) == null ? void 0 : _a.focus();
+      if (props.filterable) (_a = input.value) == null ? void 0 : _a.focus();
     } else {
       ctx.emit(UPDATE_MODEL_EVENT, option.value);
       emitChange(option.value);
@@ -489,15 +473,13 @@ const useSelect = (props, states, ctx) => {
     }
     states.isSilentBlur = byClick;
     setSoftFocus();
-    if (states.visible)
-      return;
+    if (states.visible) return;
     nextTick(() => {
       scrollToOption(option);
     });
   };
   const getValueIndex = (arr = [], value) => {
-    if (!isObject(value))
-      return arr.indexOf(value);
+    if (!isObject(value)) return arr.indexOf(value);
     const valueKey = props.valueKey;
     let index = -1;
     arr.some((item, i) => {
@@ -548,17 +530,14 @@ const useSelect = (props, states, ctx) => {
     }
   };
   const resetInputState = (e) => {
-    if (e.code !== EVENT_CODE.backspace)
-      toggleLastOptionHitState(false);
+    if (e.code !== EVENT_CODE.backspace) toggleLastOptionHitState(false);
     states.inputLength = input.value.value.length * 15 + 20;
     resetInputHeight();
   };
   const toggleLastOptionHitState = (hit) => {
-    if (!Array.isArray(states.selected))
-      return;
+    if (!Array.isArray(states.selected)) return;
     const option = states.selected[states.selected.length - 1];
-    if (!option)
-      return;
+    if (!option) return;
     if (hit === true || hit === false) {
       option.hitState = hit;
       return hit;
@@ -635,8 +614,7 @@ const useSelect = (props, states, ctx) => {
         }
       }
       if (states.visible) {
-        ;
-        (_a = input.value || reference.value) == null ? void 0 : _a.focus();
+        ;(_a = input.value || reference.value) == null ? void 0 : _a.focus();
       }
     }
   };
@@ -660,10 +638,8 @@ const useSelect = (props, states, ctx) => {
       states.visible = true;
       return;
     }
-    if (states.options.size === 0 || states.filteredOptionsCount === 0)
-      return;
-    if (states.isOnComposition)
-      return;
+    if (states.options.size === 0 || states.filteredOptionsCount === 0) return;
+    if (states.isOnComposition) return;
     if (!optionsAllDisabled.value) {
       if (direction === "next") {
         states.hoverIndex++;
@@ -745,5 +721,5 @@ const useSelect = (props, states, ctx) => {
   };
 };
 
-export { useSelect, useSelectStates };
+export {useSelect, useSelectStates};
 //# sourceMappingURL=useSelect.mjs.map
